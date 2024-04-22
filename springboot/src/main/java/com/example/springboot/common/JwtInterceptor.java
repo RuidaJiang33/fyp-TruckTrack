@@ -32,7 +32,6 @@ public class JwtInterceptor implements HandlerInterceptor {
         if (StrUtil.isBlank(token)) {
             token = request.getParameter("token"); // url参数 ?token=xxx
         }
-
         // 如果不是映射到方法直接跳过
         if (handler instanceof HandlerMethod) {
             AuthAccess annotation = ((HandlerMethod) handler).getMethodAnnotation(AuthAccess.class);
@@ -40,7 +39,6 @@ public class JwtInterceptor implements HandlerInterceptor {
                 return true;
             }
         }
-
         // 执行验证
         if (StrUtil.isBlank(token)) {
             throw new ServiceException("401", "Please Login");

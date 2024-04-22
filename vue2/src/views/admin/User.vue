@@ -3,13 +3,16 @@
     <div>
       <el-input style="width: 200px" placeholder="Search username" v-model="username"></el-input>
       <el-input style="width: 200px; margin:0 5px" placeholder="Search name" v-model="name"></el-input>
-      <el-button type="primary" @click="load(1)">Search</el-button>
+      <el-button type="primary" @click="load(1)" style="margin-left: 5px">Search</el-button>
       <el-button type="info" @click="reset" style="background-color: #6C7DF8">Reset</el-button>
     </div>
     <div style="margin: 10px 0">
       <el-button type="primary" plain @click="handleAdd">Add</el-button>
       <el-button type="danger" plain @click="delBatch">Batch delete</el-button>
       <el-button type="info" style="background-color: #6C7DF8" @click="exportData">Download</el-button>
+      <el-upload action="http://localhost:9090/user/import" :headers="{token: user.token}" :on-success="handleImport" :show-file-list="false" style="display: inline-block; margin-left: 10px">
+        <el-button type="primary" plain>Batch Import</el-button>
+      </el-upload>
     </div>
     <el-table :data="tableData" stripe :header-cell-style="{ backgroundColor:'aliceblue', color:'#666'}" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"></el-table-column>
@@ -31,7 +34,6 @@
       <el-pagination
           @current-change="handleCurrentChange"
           :current-page="pageNum"
-          :page-sizes="[100, 200, 300, 400]"
           :page-size="pageSize"
           layout="total, prev, pager, next"
           :total="total">
@@ -63,7 +65,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="userFormVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="save">Comfirm</el-button>
+        <el-button type="primary" @click="save">Confirm</el-button>
       </div>
     </el-dialog>
 
@@ -96,6 +98,14 @@ export default {
     this.load()
   },
   methods: {
+    handleImport(res, file, fileList){
+      if (res.code === '200') {
+        this.$message.success("success")
+        this.load(1)
+      } else {
+        this.$message.error(res.msg)
+      }
+    },
     exportData() {
       if (!this.uids.length) { // 没有选择行时全部导出，或根据搜索结果导出
         window.open('http://localhost:9090/user/export?token=' + this.user.token + "&username=" + this.username
@@ -169,6 +179,7 @@ export default {
     reset() {
       this.name = ''
       this.username = ''
+      this.load()
     },
     load(pageNum) { // 分页查询
       if (pageNum) {

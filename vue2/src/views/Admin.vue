@@ -27,9 +27,13 @@
               <i class="el-icon-house"></i>
               <span slot="title">Map</span>
             </el-menu-item>
-            <el-menu-item index="/report">
+            <el-menu-item index="/routeMap">
               <i class="el-icon-house"></i>
-              <span slot="title">Report</span>
+              <span slot="title">RouteMap</span>
+            </el-menu-item>
+            <el-menu-item index="/charts">
+              <i class="el-icon-house"></i>
+              <span slot="title">Charts</span>
             </el-menu-item>
           </el-submenu>
           <el-submenu index="info" :default-active="$route.path" v-if="user.role === 'admin'">
@@ -37,9 +41,9 @@
               <i class="el-icon-menu"></i>
               <span>Management</span>
             </template>
-            <el-menu-item index="/order">
+            <el-menu-item index="/orders">
               <i class="el-icon-house"></i>
-              <span slot="title">Order</span>
+              <span slot="title">Orders</span>
             </el-menu-item>
             <el-menu-item index="/truck">
               <i class="el-icon-house"></i>
@@ -48,6 +52,18 @@
             <el-menu-item index="/user">
               <i class="el-icon-house"></i>
               <span slot="title">User</span>
+            </el-menu-item>
+            <el-menu-item index="/notice">
+              <i class="el-icon-house"></i>
+              <span slot="title">Notice</span>
+            </el-menu-item>
+            <el-menu-item index="/routes">
+              <i class="el-icon-house"></i>
+              <span slot="title">Routes</span>
+            </el-menu-item>
+            <el-menu-item index="/logs">
+              <i class="el-icon-house"></i>
+              <span slot="title">Logs</span>
             </el-menu-item>
           </el-submenu>
 
@@ -86,7 +102,6 @@
 </template>
 
 <script>
-import request from '@/utils/request';
 
 export default {
   name: 'Manager',

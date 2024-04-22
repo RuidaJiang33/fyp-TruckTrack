@@ -6,11 +6,14 @@ package com.example.springboot.controller;
  * date: 2024/2/14 10:11
  */
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.common.LogType;
 import com.example.springboot.common.Result;
+import com.example.springboot.common.UserLogs;
 import com.example.springboot.entity.User;
 import com.example.springboot.exception.ServiceException;
 import com.example.springboot.service.UserService;
@@ -21,12 +24,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -37,6 +42,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @UserLogs(operation = "User", type = LogType.ADD)
     @PostMapping("/add")
     public Result add(@RequestBody User user){
         try {
@@ -51,12 +57,14 @@ public class UserController {
         return Result.success();
     }
 
+    @UserLogs(operation = "User", type = LogType.UPDATE)
     @PutMapping("/update")
     public Result update(@RequestBody User user){
         userService.updateById(user);
         return Result.success();
     }
 
+    @UserLogs(operation = "User", type = LogType.DELETE)
     @DeleteMapping("/delete/{uid}")
     public Result delete(@PathVariable Integer uid){
         User currentUser = TokenUtils.getCurrentUser();
@@ -67,6 +75,7 @@ public class UserController {
         return Result.success();
     }
 
+    @UserLogs(operation = "User", type = LogType.BATCH_DELETE)
     @DeleteMapping("/delete/batch")
     public Result batchDelete(@RequestBody List<Integer> uids){
         User currentUser = TokenUtils.getCurrentUser();
@@ -141,6 +150,24 @@ public class UserController {
         writer.close();
         outputStream.flush();
         outputStream.close();
+    }
 
+    /**
+     * 批量导入
+     * @param file 传入的excel对象
+     * @return 导入结果
+     * */
+    @PostMapping("/import")
+    public Result importData(MultipartFile file) throws IOException {
+        ExcelReader reader = ExcelUtil.getReader(file.getInputStream());
+        List<User> userList = reader.readAll(User.class);
+        // 写入数据到数据库
+        try {
+            userService.saveBatch(userList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("File import error");
+        }
+        return Result.success();
     }
 }
