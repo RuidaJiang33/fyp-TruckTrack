@@ -17,14 +17,14 @@
             <el-input prefix-icon="el-icon-lock" size="medium" show-password placeholder="confirm password" v-model="user.conformPass"></el-input>
           </el-form-item>
           <el-form-item>
+            <el-radio-group v-model="user.role">
+              <el-radio label="user"></el-radio>
+              <el-radio label="admin"></el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item>
             <el-button type="primary" style="width: 100%" @click="register">Register</el-button>
           </el-form-item>
-<!--          <el-form-item>-->
-<!--            <el-radio-group v-model="user.role">-->
-<!--              <el-radio label="user"></el-radio>-->
-<!--              <el-radio label="admin"></el-radio>-->
-<!--            </el-radio-group>-->
-<!--          </el-form-item>-->
           <div style="display: flex">
             <div style="flex: 1; font-size: 13px">With an account?  <span style="color: #3BABE7; cursor: pointer" @click="$router.push('/login')">Log in</span></div>
           </div>
@@ -53,7 +53,8 @@ export default {
       user: {
         username: '',
         password: '',
-        conformPass: ''
+        conformPass: '',
+        role:'',
       },
       rules: {
         username: [

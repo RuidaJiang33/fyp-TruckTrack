@@ -1,12 +1,12 @@
 <template>
   <div>
     <div>
-      <el-input style="width: 200px" placeholder="Search" v-model="id"></el-input>
+      <el-input style="width: 200px" placeholder="Search" v-model="licensePlate"></el-input>
       <el-button type="primary" @click="load(1)" style="margin-left: 10px">Search</el-button>
       <el-button type="info" @click="reset" style="background-color: #6C7DF8">Reset</el-button>
       <el-select v-model="selectedStatus" placeholder="Select status" @change="() => load(1)" style="padding-left: 10px">
         <el-option
-            v-for="status in options"
+            v-for="status in selectOptions"
             :key="status.value"
             :label="status.label"
             :value="status.status">
@@ -109,6 +109,10 @@ export default {
       status: '',
       selectedStatus: '',
       options: [
+        { status: 'Leisure', label: 'Leisure' },
+        { status: 'On The Way', label: 'On The Way' },
+      ],
+      selectOptions: [
         { status: '', label: 'All' },
         { status: 'Leisure', label: 'Leisure' },
         { status: 'On The Way', label: 'On The Way' },
@@ -201,6 +205,7 @@ export default {
       })
     },
     reset() {
+      this.licensePlate = ''
       this.load()
     },
     load(pageNum) { // 分页查询

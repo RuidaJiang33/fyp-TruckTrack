@@ -14,6 +14,7 @@
       <el-table-column type="selection" width="55" align="center"></el-table-column>
       <el-table-column prop="id" label="id" width="100"></el-table-column>
       <el-table-column prop="truckId" label="truckId"></el-table-column>
+      <el-table-column prop="licensePlate" label="licensePlate"></el-table-column>
       <el-table-column prop="status" label="status"></el-table-column>
       <el-table-column prop="timestamp" label="timestamp"></el-table-column>
       <el-table-column label="operation" align="center" width="230">
@@ -38,6 +39,9 @@
       <el-form :model="form" label-width="130px" style="padding-right: 20px" :rules="rules" ref="formRef">
         <el-form-item label="Truck Id" prop="oid">
           <span>{{ form.truckId }}</span>
+        </el-form-item>
+        <el-form-item label="LicensePlate" prop="licensePlate">
+          <span>{{ this.licensePlate }}</span>
         </el-form-item>
         <el-form-item label="Status" prop="status">
           <el-select v-model="form.status" placeholder="Choose Status">
@@ -92,6 +96,7 @@ export default {
       },
       ids: [],
       truckId: 0,
+      licensePlate: '',
       options: [{
         status: 'On The Way',
         label: 'On The Way'
@@ -155,7 +160,10 @@ export default {
       this.FormVisible = true
     },
     handleAdd() {
-      this.form = { truckId: this.truckId };  // 新增数据的时候清空数据
+      this.form = {
+        truckId: this.truckId,
+        licensePlate: this.licensePlate,
+      };  // 新增数据的时候清空数据
       this.FormVisible = true; //打开弹窗
     },
     save() { // 保存按钮 触发新增或更新
@@ -192,7 +200,10 @@ export default {
         }
       }).then(res => {
         if (res.code === '200') {
-          console.log(res.data.records);
+          console.log(res.data.records[0].licensePlate);
+          if (res.data !== null) {
+            this.licensePlate = res.data.records[0].licensePlate
+          }
           // 在这里调用formatTimestamp函数来转换每个记录的timestamp字段
           this.tableData = res.data.records.map(record => {
             // 检查是否存在timestamp字段且它是一个数组

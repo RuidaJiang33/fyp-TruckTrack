@@ -140,7 +140,7 @@ export default {
         if (valid) {
           this.$request({
             url: this.form.routeId? '/routes/update' : '/routes/add',
-            method: this.form.id ? 'PUT' : 'POST',
+            method: this.form.routeId ? 'PUT' : 'POST',
             data: this.form
           }).then(res => {
             if (res.code === '200') {

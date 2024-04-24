@@ -6,7 +6,7 @@
       <el-button type="info" @click="reset" style="background-color: #6C7DF8">Reset</el-button>
       <el-select v-model="selectedStatus" placeholder="Select status" @change="() => load(1)" style="padding-left: 10px">
         <el-option
-            v-for="status in options"
+            v-for="status in selectOptions"
             :key="status.value"
             :label="status.label"
             :value="status.status">
@@ -141,6 +141,11 @@ export default {
       status: '',
       selectedStatus: '',
       options: [
+        { status: 'Pending', label: 'Pending' },
+        { status: 'In Progress', label: 'In Progress' },
+        { status: 'Completed', label: 'Completed' }
+      ],
+      selectOptions: [
         { status: '', label: 'All' },
         { status: 'Pending', label: 'Pending' },
         { status: 'In Progress', label: 'In Progress' },
